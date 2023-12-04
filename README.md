@@ -6,7 +6,8 @@
 
 ## Installation
  git clone https://github.com/your-username/your-project.git
- cd your-project
+ 
+ cd ApiRest-Social-Media
 
  ## Project Structure
         |-- controllers/
