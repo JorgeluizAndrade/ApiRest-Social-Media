@@ -51,12 +51,12 @@ export const addBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
   const { title, description, image } = req.body;
 
-  const blogId = req.params.id;
+  const blogId = String(req.params.id);
 
   let blog;
 
   try {
-    blog = await Blog.findByIdAndUpdate(blogId, {
+    blog = await Blog.findOneAndUpdate({_id:blogId}, {
       title,
       description,
       image,
@@ -96,12 +96,12 @@ export const getById = async (req, res) => {
 };
 
 export const deleteBlog = async (req, res) => {
-  const id = req.params.id;
+  const idRemove = String(req.params.id);
 
   let blog;
 
   try {
-    blog = await Blog.findByIdAndRemove(id).populate("user");
+    blog = await Blog.findOneAndDelete({_id:idRemove}).populate("user");
     await blog.user.blogs.pull(blog);
     await blog.user.save();
   } catch (error) {
@@ -109,7 +109,7 @@ export const deleteBlog = async (req, res) => {
   }
 
   if (!blog) {
-    return res.status(500).json({ message: "Unable delete" });
+    return res.status(404).json({ message: "Blog not found" });
   }
 
   return res.status(200).json({
